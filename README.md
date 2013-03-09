@@ -1,4 +1,4 @@
-# Responder
+# Rescue Dog
 
 respond to an exception raised in Rails
 
