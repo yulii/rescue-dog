@@ -6,7 +6,7 @@ respond to an exception raised in Rails
 
 Add this line to your application's Gemfile:
 
-    gem 'responder'
+    gem 'rescue-dog'
 
 And then execute:
 
@@ -14,14 +14,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install responder
+    $ gem install rescue-dog
 
 ## Usage
 
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
-      include Responder::Controller
+      include Rescue::Controller
       define_errors ServerError: 500, NotFound: 404
    
       # Call the response method when raise an exception

@@ -1,7 +1,7 @@
 # coding: UTF-8
 require 'spec_helper'
 
-describe Responder::Controller do
+describe Rescue::Controller do
 
   before do
     @r = UsersController.new

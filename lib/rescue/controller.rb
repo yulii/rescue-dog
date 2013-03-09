@@ -1,5 +1,5 @@
 # coding: UTF-8
-module Responder
+module Rescue
   module Controller
 
     def self.included(base)

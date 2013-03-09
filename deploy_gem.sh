@@ -1,5 +1,5 @@
 #!/bin/sh
-LIB_NAME="responder"
+LIB_NAME="rescue-dog"
 if [ $# -ne 1 ]
 then
 	echo "invalid VERSION"

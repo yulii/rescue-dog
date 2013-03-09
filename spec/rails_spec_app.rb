@@ -17,7 +17,7 @@ end
 
 # controllers
 class ApplicationController < ActionController::Base;
-  include Responder::Controller
+  include Rescue::Controller
 end
 class UsersController < ApplicationController
   define_errors ServerError: 500, NotFound: 404
