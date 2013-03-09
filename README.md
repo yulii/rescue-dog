@@ -1,6 +1,6 @@
 # Responder
 
-TODO: Write a gem description
+respond to an exception raised in Rails
 
 ## Installation
 

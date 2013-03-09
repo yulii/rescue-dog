@@ -1,7 +1,6 @@
 # coding: UTF-8
 module Responder
   module Controller
-    extend ActiveSupport::Concern
 
     def self.included(base)
       base.extend ClassMethods

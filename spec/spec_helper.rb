@@ -2,4 +2,4 @@
 require 'rubygems'
 require 'responder'
 
-require File.join(File.dirname(__FILE__), 'spec_app')
+require File.join(File.dirname(__FILE__), 'rails_spec_app')
