@@ -5,7 +5,7 @@ require 'rescue/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "rescue-dog"
-  gem.version       = Responder::VERSION
+  gem.version       = Rescue::VERSION
   gem.authors       = ["yulii"]
   gem.email         = ["yuliinfo@gmail.com"]
   gem.description   = %q{respond to an exception raised in Rails}

@@ -21,7 +21,7 @@ then
 	exit 1
 fi
 
-echo "[RUN] mv ${PKG_FILE} ./pkg"
+echo "[RUN] mv ${PKG_FILE} pkg/"
 mv ${PKG_FILE} ./pkg
 echo "[RUN] gem push pkg/${PKG_FILE}"
 gem push pkg/${PKG_FILE}

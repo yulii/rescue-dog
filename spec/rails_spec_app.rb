@@ -18,9 +18,9 @@ end
 # controllers
 class ApplicationController < ActionController::Base;
   include Rescue::Controller
+  define_errors ServerError: 500, NotFound: 404
 end
 class UsersController < ApplicationController
-  define_errors ServerError: 500, NotFound: 404
 end
 
 Object.const_set(:ApplicationHelper,Module.new)

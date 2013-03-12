@@ -28,7 +28,7 @@ module Rescue
       def define_respond_method name, code
         return if method_defined?(name)
         define_method name do |e = nil|
-          render status: code, file: "#{Rails.root}/public/#{code}.html", layout: false and return
+          render status: code, file: "#{Rails.root}/public/#{code}.#{request.format.to_sym}", layout: false and return
         end
       end
     end
