@@ -25,3 +25,7 @@ echo "[RUN] mv ${PKG_FILE} pkg/"
 mv ${PKG_FILE} ./pkg
 echo "[RUN] gem push pkg/${PKG_FILE}"
 gem push pkg/${PKG_FILE}
+
+echo "[RUN] git tag -a version-${$1}"
+git tag -a version-$1
+git push --tags
