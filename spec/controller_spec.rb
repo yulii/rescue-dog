@@ -4,11 +4,11 @@ require 'spec_helper'
 describe Rescue::Controller do
 
   before do
-    @r = UsersController.new
+    @r = ErrorsController.new
   end
 
-  { ServerError: 500, NotFound: 404 }.each do |name, code|
-    describe name do
+  TestCase::Controller::ERRORS.each do |name, code|
+    describe "#{name} exception class" do
       subject { Object.const_defined? name }
       it "should define '#{name}' class" do
         should be_true
@@ -32,5 +32,19 @@ describe Rescue::Controller do
       end
     end
 
+    describe "raise #{name}" do
+      TestCase::Controller::FORMATS.each do |format|
+        context "request format => #{format}" do
+          before do
+            visit "/#{name.to_s.underscore}.#{format.to_sym}"
+          end
+
+          subject { page }
+          it { should have_content name.to_s.gsub(/([A-Z]+)([A-Z][a-z])/,'\1 \2').gsub(/([a-z\d])([A-Z])/,'\1 \2') }
+          it { response_headers["Content-Type"].should include(format.to_s) }
+        end
+      end
+    end
   end ## end each
+
 end
