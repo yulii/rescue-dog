@@ -1,32 +1,14 @@
 # coding: UTF-8
 require 'spec_helper'
 
-describe Rescue::Controller do
+describe Rescue::Controller::Dynamic do
 
-  before do
-    @r = ErrorsController.new
-  end
+  let(:object) { DynamicController.new }
 
   TestCase::Controller::ERRORS.each do |name, code|
-    describe "#{name} exception class" do
-      subject { Object.const_defined? name }
-      it "should define '#{name}' class" do
-        should be_true
-      end
-
-      subject { Object.const_get(name).new }
-      it "should be a kind of StandardError" do
-        should be_a_kind_of StandardError
-      end
-    end
 
     describe "respond_#{code} method" do
-      subject { ApplicationController.method_defined? :"respond_#{code}" }
-      it "should be defined in ApplicationController" do
-        should be_true
-      end
-
-      subject { @r.methods.include?(:"respond_#{code}") }
+      subject { object.methods.include?(:"respond_#{code}") }
       it "should be called in a subclass of ApplicationController" do
         should be_true
       end
@@ -36,7 +18,7 @@ describe Rescue::Controller do
       TestCase::Controller::FORMATS.each do |format|
         context "request format => #{format}" do
           before do
-            visit "/#{name.to_s.underscore}.#{format.to_sym}"
+            visit "/dynamic/#{name.to_s.underscore}.#{format.to_sym}"
           end
 
           subject { page }
