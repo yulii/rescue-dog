@@ -18,14 +18,14 @@ Or install it yourself as:
 
 ## Usage
 
-### Render Static HTML
+### Render Static Files
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
       include Rescue::Controller
       define_errors :static, ServerError: 500, NotFound: 404
 
-### Render Static HTML
+### Render Template
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
