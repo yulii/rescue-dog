@@ -18,17 +18,27 @@ Or install it yourself as:
 
 ## Usage
 
+### Render Static HTML
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
       include Rescue::Controller
-      define_errors ServerError: 500, NotFound: 404
+      define_errors :static, ServerError: 500, NotFound: 404
+
+### Render Static HTML
+    $ vim app/controllers/application_controller.rb
+    class ApplicationController
    
-      # Call the response method when raise an exception
-      #   for ActiveRecord
-      rescue_from ActiveRecord::RecordNotFound, with: respond_404
-      #   for Mongoid
-      rescue_from Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: :respond_404
+      include Rescue::Controller
+      define_errors :dynamic, ServerError: 500, NotFound: 404
+
+### Associated with the exceptions 
+Call the response method when raise an exception
+
+#### for ActiveRecord
+    rescue_from ActiveRecord::RecordNotFound, with: respond_404
+#### for Mongoid
+    rescue_from Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: :respond_404
 
 ## Contributing
 
