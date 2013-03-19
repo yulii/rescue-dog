@@ -30,8 +30,8 @@ end
 class ApplicationController < ActionController::Base ; end
 
 class StaticController < ApplicationController
-  include Rescue::Controller
-  define_errors :static, BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
+  include Rescue::Controller::Static
+  define_errors BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
 
   STATUSES.each do |name, code|
     class_name = "#{name}".classify
@@ -42,13 +42,13 @@ class StaticController < ApplicationController
 end
 
 class DynamicController < ApplicationController
-  include Rescue::Controller
-  define_errors :dynamic, BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
+  include Rescue::Controller::Dynamic
+  define_errors BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
 
   STATUSES.each do |name, code|
     class_name = "#{name}".classify
     define_method name do
-      raise class_name.constantize
+      raise class_name.constantize.new "This is an explanation of what caused the error."
     end
   end
 end

@@ -7,20 +7,14 @@ module Rescue
     def self.included(base) ; base.extend ClassMethods ; end
 
     module ClassMethods
-      def define_errors render, statuses, superclass = StandardError
-        case render
-        when :static  ; include Rescue::Controller::Static
-        when :dynamic ; include Rescue::Controller::Dynamic
-        else          ; raise NotImplementedError, "#{name} is undefined because invalid routes specified."
-        end
+      def define_errors statuses, superclass = StandardError
+
+        respond = :respond_status
+        define_respond_method respond
 
         statuses.each do |class_name, code|
-          respond = :"respond_#{code}"
-
           Rescue.define_error_class class_name, superclass
-
-          define_respond_method respond, code
-          rescue_from "#{class_name}".constantize, with: respond
+          rescue_from "#{class_name}".constantize, with: lambda {|e| send(respond, code, e) }
         end
       end
 

@@ -3,13 +3,16 @@
 module Rescue
   module Controller
     module Dynamic
-      def self.included(base) ; base.extend ClassMethods ; end
+      def self.included(base)
+        base.extend ClassMethods
+        base.extend Rescue::Controller::ClassMethods
+      end
 
       module ClassMethods
    
-        def define_respond_method name, code
+        def define_respond_method name
           return if method_defined?(name)
-          define_method name do |exception = nil|
+          define_method name do |code, exception = nil|
             e = {}
             e[:code]    = code
             e[:status]  = Rack::Utils::HTTP_STATUS_CODES[code]

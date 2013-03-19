@@ -5,16 +5,16 @@ describe Rescue::Controller::Static do
 
   let(:object) { StaticController.new }
 
+  describe "respond method" do
+    subject { object.methods.include?(:respond_status) }
+    it "should be called in a subclass of ApplicationController" do
+      should be_true
+    end
+  end
+
   TestCase::Controller::ERRORS.each do |name, code|
 
-    describe "respond_#{code} method" do
-      subject { object.methods.include?(:"respond_#{code}") }
-      it "should be called in a subclass of ApplicationController" do
-        should be_true
-      end
-    end
-
-    describe "raise #{name}" do
+    describe "response when raise #{name}" do
       TestCase::Controller::FORMATS.each do |format|
         context "request format => #{format}" do
           before do
