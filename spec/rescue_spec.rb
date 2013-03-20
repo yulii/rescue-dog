@@ -5,7 +5,7 @@ describe Rescue do
 
   describe "define_error_class :RescueStandardError" do
     let(:name) { :RescueStandardError }
-    before     { Rescue.define_error_class name }
+    before     { Rescue::Bind.define_error_class name }
 
     subject { Object.const_defined? name }
     it "should define an exception class" do
@@ -20,7 +20,7 @@ describe Rescue do
 
   describe "define_error_class :RescueScriptError, ScriptError" do
     let(:name) { :RescueScriptError }
-    before     { Rescue.define_error_class name, ScriptError }
+    before     { Rescue::Bind.define_error_class name, ScriptError }
 
     subject { Object.const_defined? name }
     it "should define an exception class" do
