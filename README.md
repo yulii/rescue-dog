@@ -1,6 +1,6 @@
 # Rescue Dog
 
-respond to an exception raised in Rails
+The Rescue-Dog responds HTTP status (the code and message) when raise the exception.
 
 ## Installation
 
@@ -18,7 +18,13 @@ Or install it yourself as:
 
 ## Usage
 
+1. Include `Rescue::Controller::Static` or `Rescue::Controller::Dynamic`.
+2. Call `rescue_associate` method. And then, the exception class is defined and added to `rescue_handlers`.
+3. Raise the exception or Call `response_status` method.
+
 ### Render Static Files
+Render /public/400(.:format) if you raise BadRequest exception.
+
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
@@ -29,6 +35,8 @@ Or install it yourself as:
       rescue_associate :ServerError  ,with: 500
 
 ### Render Template
+Render app/views/errors/404(.:format) if you raise NotFound exception.
+
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
@@ -39,12 +47,13 @@ Or install it yourself as:
       rescue_associate :ServerError  ,with: 500
 
 ### Associated with the exceptions 
-Call the response method when raise an exception
+Call the response method when raise an exception.
 
 #### for ActiveRecord
     rescue_associate ActiveRecord::RecordNotFound ,with: 404
 #### for Mongoid
     rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
+
 
 ## Contributing
 
