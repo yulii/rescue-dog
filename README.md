@@ -23,22 +23,28 @@ Or install it yourself as:
     class ApplicationController
    
       include Rescue::Controller::Static
-      define_errors ServerError: 500, NotFound: 404
+      rescue_associate :BadRequest   ,with: 400
+      rescue_associate :Unauthorized ,with: 401
+      rescue_associate :NotFound     ,with: 404
+      rescue_associate :ServerError  ,with: 500
 
 ### Render Template
     $ vim app/controllers/application_controller.rb
     class ApplicationController
    
       include Rescue::Controller::Dynamic
-      define_errors ServerError: 500, NotFound: 404
+      rescue_associate :BadRequest   ,with: 400
+      rescue_associate :Unauthorized ,with: 401
+      rescue_associate :NotFound     ,with: 404
+      rescue_associate :ServerError  ,with: 500
 
 ### Associated with the exceptions 
 Call the response method when raise an exception
 
 #### for ActiveRecord
-    rescue_from ActiveRecord::RecordNotFound, with: lambda {|e| respond_status 404 }
+    rescue_associate ActiveRecord::RecordNotFound ,with: 404
 #### for Mongoid
-    rescue_from Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: lambda {|e| respond_status 404 }
+    rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
 
 ## Contributing
 
