@@ -31,7 +31,10 @@ class ApplicationController < ActionController::Base ; end
 
 class StaticController < ApplicationController
   include Rescue::Controller::Static
-  define_errors BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
+  rescue_associate :BadRequest   ,with: 400
+  rescue_associate :Unauthorized ,with: 401
+  rescue_associate :NotFound     ,with: 404
+  rescue_associate :ServerError  ,with: 500
 
   STATUSES.each do |name, code|
     class_name = "#{name}".classify
@@ -43,7 +46,10 @@ end
 
 class DynamicController < ApplicationController
   include Rescue::Controller::Dynamic
-  define_errors BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
+  rescue_associate :BadRequest   ,with: 400
+  rescue_associate :Unauthorized ,with: 401
+  rescue_associate :NotFound     ,with: 404
+  rescue_associate :ServerError  ,with: 500
 
   STATUSES.each do |name, code|
     class_name = "#{name}".classify
