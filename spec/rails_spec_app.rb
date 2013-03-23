@@ -9,6 +9,19 @@ STATUSES = {
   :server_error => 500,
 }
 
+# dummy module
+module ActiveRecord
+  class RecordNotFound < StandardError ; end
+end
+module Mongoid
+  module Errors
+    class DocumentNotFound < StandardError ; end
+  end
+end
+module BSON
+  class InvalidObjectId < RuntimeError ; end
+end
+
 # config
 app = Class.new Rails::Application
 app.config.active_support.deprecation = :log
@@ -33,7 +46,7 @@ class StaticController < ApplicationController
   include Rescue::Controller::Static
   rescue_associate :BadRequest   ,with: 400
   rescue_associate :Unauthorized ,with: 401
-  rescue_associate :NotFound     ,with: 404
+  rescue_associate :NotFound, Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
   rescue_associate :ServerError  ,with: 500
 
   STATUSES.each do |name, code|
@@ -48,7 +61,7 @@ class DynamicController < ApplicationController
   include Rescue::Controller::Dynamic
   rescue_associate :BadRequest   ,with: 400
   rescue_associate :Unauthorized ,with: 401
-  rescue_associate :NotFound     ,with: 404
+  rescue_associate :NotFound, ActiveRecord::RecordNotFound, with: 404
   rescue_associate :ServerError  ,with: 500
 
   STATUSES.each do |name, code|
