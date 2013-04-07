@@ -6,15 +6,21 @@ The Rescue-Dog responds HTTP status (the code and message) when raise the except
 
 Add this line to your application's Gemfile:
 
-    gem 'rescue-dog'
+```ruby
+gem 'rescue-dog'
+```
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install rescue-dog
+```bash
+$ gem install rescue-dog
+```
 
 ## Usage
 
@@ -25,35 +31,51 @@ Or install it yourself as:
 ### Render Static Files
 Render /public/400(.:format) if you raise BadRequest exception.
 
-    $ vim app/controllers/application_controller.rb
-    class ApplicationController
+```bash
+$ vim app/controllers/application_controller.rb
+```
+
+```ruby
+class ApplicationController
    
-      include Rescue::Controller::Static
-      rescue_associate :BadRequest   ,with: 400
-      rescue_associate :Unauthorized ,with: 401
-      rescue_associate :NotFound     ,with: 404
-      rescue_associate :ServerError  ,with: 500
+  include Rescue::Controller::Static
+  rescue_associate :BadRequest   ,with: 400
+  rescue_associate :Unauthorized ,with: 401
+  rescue_associate :NotFound     ,with: 404
+  rescue_associate :ServerError  ,with: 500
+```
 
 ### Render Template
 Render app/views/errors/404(.:format) if you raise NotFound exception.
 
-    $ vim app/controllers/application_controller.rb
-    class ApplicationController
+```bash
+$ vim app/controllers/application_controller.rb
+```
+
+```ruby
+class ApplicationController
    
-      include Rescue::Controller::Dynamic
-      rescue_associate :BadRequest   ,with: 400
-      rescue_associate :Unauthorized ,with: 401
-      rescue_associate :NotFound     ,with: 404
-      rescue_associate :ServerError  ,with: 500
+  include Rescue::Controller::Dynamic
+  rescue_associate :BadRequest   ,with: 400
+  rescue_associate :Unauthorized ,with: 401
+  rescue_associate :NotFound     ,with: 404
+  rescue_associate :ServerError  ,with: 500
+```
 
 ### Associated with the exceptions 
 Call the response method when raise an exception.
 
 #### for ActiveRecord
-    rescue_associate ActiveRecord::RecordNotFound ,with: 404
-#### for Mongoid
-    rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
 
+```ruby
+rescue_associate ActiveRecord::RecordNotFound ,with: 404
+```
+
+#### for Mongoid
+
+```ruby
+rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
+```
 
 ## Contributing
 
