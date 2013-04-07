@@ -6,9 +6,8 @@ describe Rescue::Controller::Static do
   let(:object) { StaticController.new }
 
   describe "respond method" do
-    subject { object.methods.include?(:respond_status) }
-    it "should be called in a subclass of ApplicationController" do
-      should be_true
+    it "expects to be called in a subclass of ApplicationController" do
+      expect(object.methods.include? :respond_status).to be_true
     end
   end
 
@@ -21,9 +20,8 @@ describe Rescue::Controller::Static do
             visit "/static/#{name.to_s.underscore}.#{format.to_sym}"
           end
 
-          subject { page }
-          it { should have_content name.to_s.gsub(/([A-Z]+)([A-Z][a-z])/,'\1 \2').gsub(/([a-z\d])([A-Z])/,'\1 \2') }
-          it { response_headers["Content-Type"].should include(format.to_s) }
+          it { expect(page).to have_content name.to_s.gsub(/([A-Z]+)([A-Z][a-z])/,'\1 \2').gsub(/([a-z\d])([A-Z])/,'\1 \2') }
+          it { expect(response_headers["Content-Type"]).to include(format.to_s) }
         end
       end
     end

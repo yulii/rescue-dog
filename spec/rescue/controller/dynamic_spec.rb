@@ -6,9 +6,8 @@ describe Rescue::Controller::Dynamic do
   let(:object) { DynamicController.new }
 
   describe "respond method" do
-    subject { object.methods.include?(:respond_status) }
-    it "should be called in a subclass of ApplicationController" do
-      should be_true
+    it "expects to be called in a subclass of ApplicationController" do
+      expect(object.methods.include? :respond_status).to be_true
     end
   end
 
@@ -21,10 +20,9 @@ describe Rescue::Controller::Dynamic do
             visit "/dynamic/#{name.to_s.underscore}.#{format.to_sym}"
           end
 
-          subject { page }
-          it { should have_content name.to_s.gsub(/([A-Z]+)([A-Z][a-z])/,'\1 \2').gsub(/([a-z\d])([A-Z])/,'\1 \2') }
-          it { should have_content "This is an explanation of what caused the error." } unless format.to_sym == :html
-          it { response_headers["Content-Type"].should include(format.to_s) }
+          it { expect(page).to have_content name.to_s.gsub(/([A-Z]+)([A-Z][a-z])/,'\1 \2').gsub(/([a-z\d])([A-Z])/,'\1 \2') }
+          it { expect(page).to have_content "This is an explanation of what caused the error." } unless format.to_sym == :html
+          it { expect(response_headers["Content-Type"]).to include(format.to_s) }
         end
       end
     end

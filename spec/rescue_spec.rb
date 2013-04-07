@@ -7,14 +7,12 @@ describe Rescue do
     let(:name) { :RescueStandardError }
     before     { Rescue::Bind.define_error_class name }
 
-    subject { Object.const_defined? name }
-    it "should define an exception class" do
-      should be_true
+    it "expects to define an exception class" do
+      expect(Object.const_defined? name).to be_true
     end
 
-    subject { Object.const_get(name).new }
-    it "should define an exception class that is a kind of StandardError" do
-      should be_a_kind_of StandardError
+    it "expects to define an exception class that is a kind of StandardError" do
+      expect(Object.const_get(name).new).to be_a_kind_of StandardError
     end
   end
 
@@ -22,14 +20,12 @@ describe Rescue do
     let(:name) { :RescueScriptError }
     before     { Rescue::Bind.define_error_class name, ScriptError }
 
-    subject { Object.const_defined? name }
-    it "should define an exception class" do
-      should be_true
+    it "expects to define an exception class" do
+      expect(Object.const_defined? name).to be_true
     end
 
-    subject { Object.const_get(name).new }
-    it "should define an exception class that is a kind of StandardError" do
-      should be_a_kind_of ScriptError
+    it "expects to define an exception class that is a kind of StandardError" do
+      expect(Object.const_get(name).new).to be_a_kind_of ScriptError
     end
   end
 
