@@ -1,6 +1,4 @@
 # coding: UTF-8
-require File.join(File.dirname(__FILE__), "controller/static.rb")
-require File.join(File.dirname(__FILE__), "controller/dynamic.rb")
 
 module Rescue
   module Controller
@@ -13,7 +11,7 @@ module Rescue
         unless block_given?
           if options.has_key?(:with)
             if options[:with].is_a?(Integer)
-              block = lambda {|e| send(Rescue::Bind.respond_name, options[:with], e) }
+              block = lambda {|e| send(Rescue.config.respond_name, options[:with], e) }
             elsif options[:with].is_a?(Proc)
               block = options[:with]
             end

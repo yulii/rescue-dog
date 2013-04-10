@@ -6,7 +6,7 @@ module Rescue
 
       def self.included(base)
         base.class_eval do
-          define_method Rescue::Bind.respond_name do |code, exception = nil|
+          define_method Rescue.config.respond_name do |code, exception = nil|
             e = {}
             e[:code]    = code
             e[:status]  = Rack::Utils::HTTP_STATUS_CODES[code]
