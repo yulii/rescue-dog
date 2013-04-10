@@ -1,10 +1,12 @@
 # encoding: utf-8
 require 'rubygems'
 require 'rescue-dog'
+require 'coveralls'
 
 require File.join(File.dirname(__FILE__), 'rails_spec_app')
 require File.join(File.dirname(__FILE__), 'test_case')
 require 'capybara/rails'
+Coveralls.wear!
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec do |c|
