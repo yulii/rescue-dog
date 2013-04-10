@@ -8,8 +8,11 @@ fi
 GEMSPEC="${LIB_NAME}.gemspec"
 PKG_FILE="${LIB_NAME}-$1.gem"
 
-echo "[RUN] rspec"
-rspec
+echo "[RUN] gem install"
+bundle install
+echo "[RUN] rake"
+bundle exec rake
+
 if [ $? -eq 1 ]
 then
 	exit 1
@@ -29,3 +32,6 @@ gem push pkg/${PKG_FILE}
 echo "[RUN] git tag -a version-$1"
 git tag -a version-$1 -m ""
 git push --tags
+
+echo "[RUN] coveralls push"
+bundle exec coveralls push

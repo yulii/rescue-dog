@@ -1,5 +1,6 @@
 # Rescue Dog
 [![Gem Version](https://badge.fury.io/rb/rescue-dog.png)](http://badge.fury.io/rb/rescue-dog)
+[![Coverage Status](https://coveralls.io/repos/yulii/rescue-dog/badge.png?branch=master)](https://coveralls.io/r/yulii/rescue-dog)
 [![Build Status](https://travis-ci.org/yulii/rescue-dog.png)](https://travis-ci.org/yulii/rescue-dog)
 
 The Rescue-Dog responds HTTP status (the code and message) when raise the exception.
