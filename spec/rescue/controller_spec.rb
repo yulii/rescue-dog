@@ -3,12 +3,17 @@ require 'spec_helper'
 
 describe Rescue::Controller do
 
-  let(:dynamic) do
-    clazz = Class.new ApplicatoinController do
-      include Rescue::Controller
-      define_errors :dynamic, BadRequest: 400, Unauthorized: 401, NotFound: 404, ServerError: 500
+  let(:object) do
+    clazz = Class.new ApplicationController do
+      include Rescue::Controller::ClassMethods
     end
     clazz.new
+  end
+
+  describe "include ClassMethods module" do
+    it "expects to be call `rescue_associate` method" do
+      expect(object.methods.include? :rescue_associate).to be_true
+    end
   end
 
 end
