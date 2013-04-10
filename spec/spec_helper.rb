@@ -6,7 +6,8 @@ require 'coveralls'
 require File.join(File.dirname(__FILE__), 'rails_spec_app')
 require File.join(File.dirname(__FILE__), 'test_case')
 require 'capybara/rails'
-Coveralls.wear!
+
+Coveralls.wear!('rails')
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec do |c|
