@@ -14,6 +14,8 @@ matrix:
 branches:
   only:
     - master
+after_success:
+  - cover -report coveralls
 notifications:
   recipients:
     - yuliinfo@gmail.com
