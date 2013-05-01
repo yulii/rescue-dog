@@ -8,9 +8,13 @@ module Rescue
         base.class_eval do
           define_method Rescue.config.respond_name do |code, exception = nil|
             e = {}
-            e[:code]    = code
-            e[:status]  = Rack::Utils::HTTP_STATUS_CODES[code]
-            e[:message] = exception.message if exception
+            if e.is_a? Rescue::ApplicationError
+              e = { code: e.code, status: e.status, message: e.message }
+            else
+              e[:code]    = code
+              e[:status]  = Rack::Utils::HTTP_STATUS_CODES[code]
+              e[:message] = exception.message if exception
+            end
   
             respond_to do |format|
               format.html { render status: code, template: "/errors/#{code}" }

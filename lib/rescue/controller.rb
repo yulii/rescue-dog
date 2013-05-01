@@ -24,7 +24,11 @@ module Rescue
           key = if klass.is_a?(Class) && klass <= Exception
             klass.name
           elsif klass.is_a?(String) || klass.is_a?(Symbol)
-            Rescue::Bind.define_error_class klass, StandardError
+            if options.has_key?(:superclass)
+              Rescue::Bind.define_error_class klass, options[:superclass]
+            else
+              Rescue::Bind.define_error_class klass, StandardError
+            end
             klass
           else
             raise ArgumentError, "#{klass} is neither an Exception nor a String"

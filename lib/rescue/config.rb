@@ -1,10 +1,7 @@
 require 'active_support/configurable'
 
 module Rescue
-  # Configures global settings for Ratel
-  #   Ratel.configure do |config|
-  #     config.respond_name = :respond_status
-  #   end
+
   def self.configure(&block)
     yield @config ||= Rescue::Configuration.new
   end
@@ -16,6 +13,7 @@ module Rescue
   class Configuration #:nodoc:
     include ActiveSupport::Configurable
     config_accessor :respond_name
+    config_accessor :suppress_response_codes
 
     def param_name
       config.param_name.respond_to?(:call) ? config.param_name.call : config.param_name
@@ -28,6 +26,7 @@ module Rescue
   end
 
   configure do |config|
-    config.respond_name = :respond_status
+    config.respond_name            = :respond_status
+    config.suppress_response_codes = false
   end
 end
