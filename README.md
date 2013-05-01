@@ -80,6 +80,25 @@ rescue_associate ActiveRecord::RecordNotFound ,with: 404
 rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
 ```
 
+### Respond Application Error Codes
+1. Include `Rescue::Controller::Dynamic` (NOT `Rescue::Controller::Static`).
+2. Include `Rescue::RespondError`
+3. Raise the exception (cf. `Rescue::ApplicationError::STATUS_CODES`)
+
+```ruby
+class ApplicationController
+  include Rescue::Controller::Dynamic
+  include Rescue::RespondError
+```
+
+#### Suppress HTTP Response Codes
+All responses will be returned with a 200 OK status code, even if the error occurs.
+```ruby
+Rescue.configure do |config|
+  config.suppress_response_codes = true
+end
+```
+
 ## Contributing
 
 1. Fork it
