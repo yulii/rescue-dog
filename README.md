@@ -32,7 +32,7 @@ $ gem install rescue-dog
 2. Call `rescue_associate` method. And then, the exception class is defined and added to `rescue_handlers`.
 3. Raise the exception or Call `response_status` method.
 
-## Render Static Files
+### Render Static Files
 Render /public/400(.:format) if you raise BadRequest exception.
 
 ```ruby
@@ -45,7 +45,7 @@ class ApplicationController
   rescue_associate :ServerError  ,with: 500
 ```
 
-## Render Template
+### Render Template
 Render app/views/errors/404(.:format) if you raise NotFound exception.
 
 ```ruby
@@ -58,16 +58,16 @@ class ApplicationController
   rescue_associate :ServerError  ,with: 500
 ```
 
-## Associated with the exceptions 
+### Associated with the exceptions 
 Call the response method when raise an exception.
 
-### for ActiveRecord
+#### for ActiveRecord
 
 ```ruby
 rescue_associate ActiveRecord::RecordNotFound ,with: 404
 ```
 
-### for Mongoid
+#### for Mongoid
 
 ```ruby
 rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
@@ -75,7 +75,7 @@ rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with:
 
 Learn more usage, check [`spec`](https://github.com/yulii/rescue-dog/blob/master/spec/rails_spec_app.rb)
 
-## Respond Application Error Codes
+### Respond Application Error Codes
 1. Include `Rescue::Controller::Dynamic` (NOT `Rescue::Controller::Static`).
 2. Include `Rescue::RespondError`
 3. Raise the exception (cf. [`Rescue::ApplicationError::STATUS_CODES`](https://github.com/yulii/rescue-dog/blob/master/lib/rescue/exceptions/application_error.rb))
@@ -86,7 +86,7 @@ class ApplicationController
   include Rescue::RespondError
 ```
 
-### Suppress HTTP Response Codes
+#### Suppress HTTP Response Codes
 All responses will be returned with a 200 OK status code, even if the error occurs.
 ```ruby
 Rescue.configure do |config|
