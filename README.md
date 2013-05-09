@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/yulii/rescue-dog.png)](https://travis-ci.org/yulii/rescue-dog)
 [![Dependency Status](https://gemnasium.com/yulii/rescue-dog.png)](https://gemnasium.com/yulii/rescue-dog)
 
-The Rescue-Dog responds HTTP status (the code and message) when raise the exception.
+The Rescue-Dog responds HTTP status (the code and message) when raises the exception for Rails.
 
 ## Installation
 
