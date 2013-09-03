@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{respond to an exception raised in Rails}
   gem.summary       = %q{define respond methods}
   gem.homepage      = "https://github.com/yulii/rescue-dog"
+  gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
