@@ -38,8 +38,8 @@ app.initialize!
 # routing
 app.routes.draw do
   STATUSES.each do |name, code|
-    get "/static/#{name}"  =>"static##{name}"  ,as: name
-    get "/dynamic/#{name}" =>"dynamic##{name}" ,as: name
+    get "/static/#{name}"  =>"static##{name}"  ,as: "static_#{name}"
+    get "/dynamic/#{name}" =>"dynamic##{name}" ,as: "dynamic_#{name}"
   end
 
   Rescue::ApplicationError::STATUS_CODES.each do |code, e|

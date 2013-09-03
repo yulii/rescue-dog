@@ -3,7 +3,7 @@ require 'rubygems'
 require 'rescue-dog'
 require 'coveralls'
 
-require File.join(File.dirname(__FILE__), 'rails_spec_app')
+require File.join(File.dirname(__FILE__), 'fake_rails')
 require File.join(File.dirname(__FILE__), 'test_case')
 require 'capybara/rails'
 
