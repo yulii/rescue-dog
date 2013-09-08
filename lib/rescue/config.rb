@@ -12,6 +12,7 @@ module Rescue
 
   class Configuration #:nodoc:
     include ActiveSupport::Configurable
+    config_accessor :primary_key
     config_accessor :respond_name
     config_accessor :suppress_response_codes
 
@@ -26,6 +27,7 @@ module Rescue
   end
 
   configure do |config|
+    config.primary_key             = :id
     config.respond_name            = :respond_status
     config.suppress_response_codes = false
   end

@@ -91,4 +91,7 @@ class StatusController < ApplicationController
   end
 end
 
+# models
+class RescueModel ; end
+
 Object.const_set(:ApplicationHelper,Module.new)

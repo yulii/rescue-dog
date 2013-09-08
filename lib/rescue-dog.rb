@@ -2,6 +2,8 @@ require 'rescue/config.rb'
 require 'rescue/controller.rb'
 require "rescue/controllers/static.rb"
 require "rescue/controllers/dynamic.rb"
+require "rescue/controllers/action.rb"
+require "rescue/controllers/parameter.rb"
 require 'rescue/exceptions/application_error.rb'
 require 'rescue/exceptions/respond_error.rb'
 
