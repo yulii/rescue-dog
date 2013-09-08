@@ -43,22 +43,23 @@ module Rescue
         params_sym = :"#{name}_params"
 
         Parameter.define(self)
+        Action.define(self, clazz, var_sym, params_sym)
 
         [:new].each do |type|
           args = options.delete(type) || (actions.delete(type) ? {} : nil)
-          Action.define(self, type, type, clazz, var_sym, params_sym, args) if args
+          define_action_method(type, :new_call, args) if args
         end
 
         [:show, :edit].each do |type|
           args = options.delete(type) || (actions.delete(type) ? {} : nil)
-          Action.define(self, type, :find, clazz, var_sym, params_sym, args) if args
+          define_action_method(type, :find_call, args) if args
         end
  
         [:create, :update, :delete].each do |type|
           args = options.delete(type) || (actions.delete(type) ? {} : nil)
           if args
             args[:flash] ||= true
-            Action.define(self, type, type, clazz, var_sym, params_sym, args)
+            define_action_method(type, :"#{type}_call", args) if args
           end
         end
       end

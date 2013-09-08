@@ -5,6 +5,7 @@ class TestCase
     FORMATS = [Mime::Type.new("text/html", :html), Mime::Type.new("application/json", :json)]
 
     RESCUE_OPTIONS = [
+      [],
       [:show],
       [:new, :show, :create],
       [:new, :show, :edit, :create, :update],

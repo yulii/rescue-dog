@@ -53,25 +53,9 @@ describe Rescue::Controller do
           end
         end
 
-        if methods.include? :edit or methods.include? :show
-          it "should be defined private method `find_call`" do
-            expect(object.private_instance_methods.include? :find_call).to be_true
-          end
-        else
-          it "should not be defined method `#{name}_call`" do
-            expect(object.instance_methods.include? :find_call).to be_false
-          end
-        end
-
-        [:new, :create, :update, :delete].each do |name|
-          if methods.include? name
-            it "should be defined private method `#{name}_call`" do
-              expect(object.private_instance_methods.include? :"#{name}_call").to be_true
-            end
-          else
-            it "should not be defined method `#{name}_call`" do
-              expect(object.instance_methods.include? :"#{name}_call").to be_false
-            end
+        [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
+          it "should be defined private method `#{name}`" do
+            expect(object.private_instance_methods.include? name).to be_true
           end
         end
 
