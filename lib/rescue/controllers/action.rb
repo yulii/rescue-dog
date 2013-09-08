@@ -9,7 +9,13 @@ module Rescue
         call_name   = :"#{type}_call"
 
         define_call(object, type, call_name, clazz, var_sym, params_sym)
-        object.define_action_method(method_name, call_name, options)
+
+        case type
+        when :create, :update, :delete
+          object.define_action_method(method_name, call_name, { flash: true }.merge(options))
+        else
+          object.define_action_method(method_name, call_name, options)
+        end
       end
 
       private

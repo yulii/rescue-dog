@@ -37,9 +37,8 @@ module Rescue
       end
 
       def rescue_controller clazz, *actions
-        options = actions.extract_options!
-
-        name = clazz.name.downcase
+        options    = actions.extract_options!
+        name       = clazz.name.downcase
         var_sym    = :"@#{name}"
         params_sym = :"#{name}_params"
 
@@ -54,18 +53,20 @@ module Rescue
         Action.define(self, :delete, :delete, clazz, var_sym, params_sym, options[:delete])
       end
 
-      # TODO flash メッセージの構築ロジックを外出しに
       def define_action_method name, call_method, options = {}
-        default_scope = [:default, :flash]
-        success_message = options[:success] || I18n.t(:success ,scope: default_scope ,default: '')
-        error_message   = options[:error]   || I18n.t(:error   ,scope: default_scope ,default: '')
+        success_message = options[:success]
+        error_message   = options[:error]
+        if options[:flash]
+          success_message ||= Flash.message(self, name, :success)
+          error_message   ||= Flash.message(self, name, :error)
+        end
+
         define_method name do
           begin
             send(call_method)
             flash[:success] = success_message unless success_message.blank?
             instance_exec(&options[:render]) if options[:render]
           rescue
-            # TODO でバッグ用のエラーメッセージ出力ロジックは？？？
             flash.now[:error] = error_message unless error_message.blank?
             instance_exec(&options[:rescue]) if options[:rescue]
           end
