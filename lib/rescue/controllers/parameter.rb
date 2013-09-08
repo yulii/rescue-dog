@@ -3,7 +3,6 @@ module Rescue
   module Controller
     class Parameter
 
-      protected
       def self.define object
         id = Rescue.config.primary_key
         object.send(:define_method, :find_params) do

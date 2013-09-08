@@ -7,6 +7,8 @@ class TestCase
     RESCUE_OPTIONS = [
       [:create, :update]
     ]
+
+    FLASHS = [:DefaultController, :RescueController, :RescueDogController]
   end 
 
 end

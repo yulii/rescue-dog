@@ -3,14 +3,14 @@ require 'spec_helper'
 
 describe Rescue::Controller do
 
-  let(:object) do
-    Class.new ApplicationController do
-      extend Rescue::Controller::ClassMethods
+  describe Rescue::Controller::ClassMethods do
+    let(:object) do
+      Class.new ApplicationController do
+        extend Rescue::Controller::ClassMethods
+      end
     end
-  end
 
-  [:rescue_associate, :rescue_controller, :define_action_method].each do |name|
-    describe "include ClassMethods module" do
+    [:rescue_associate, :rescue_controller, :define_action_method].each do |name|
       it "should be able to call method `#{name}`" do
         expect(object.public_methods.include? name).to be_true
       end

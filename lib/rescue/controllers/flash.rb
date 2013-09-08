@@ -3,12 +3,12 @@ module Rescue
   module Controller
     class Flash
 
-      protected
       def self.message object, action, key 
-        text(key, [:views, object.class.name.downcase, action, :flash])
+        controllers = object.class.name.gsub('Controller', '').split('::').map {|e| e.underscore }
+        scope = ([:views] + controllers) << action << :flash
+        text(key, scope)
       end
 
-      private
       def self.default key
         s = I18n.t(key, scope: [:default, :flash], default: '')
         s.blank? ? nil : s
@@ -18,7 +18,7 @@ module Rescue
         s = I18n.t(key, scope: scope, default: '')
         s.blank? ? default(key) : s
       end
-
+      private_class_method :default, :text
     end
   end
 end

@@ -3,7 +3,6 @@ module Rescue
   module Controller
     class Action
 
-      protected
       def self.define object, method_name, type, clazz, var_sym, params_sym, options
         options ||= {}
         call_name   = :"#{type}_call"
@@ -18,7 +17,6 @@ module Rescue
         end
       end
 
-      private
       def self.define_call object, type, call_name, clazz, var_sym, params_sym
         return if object.method_defined? call_name
         case type
@@ -53,6 +51,7 @@ module Rescue
         object.send(:private, call_name)
       end
 
+      private_class_method :define_call
     end
   end
 end
