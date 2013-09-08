@@ -3,18 +3,11 @@ module Rescue
   module Controller
     class Action
 
-      def self.define object, method_name, type, clazz, var_sym, params_sym, options
-        options ||= {}
+      def self.define object, method_name, type, clazz, var_sym, params_sym, options = {}
         call_name   = :"#{type}_call"
 
         define_call(object, type, call_name, clazz, var_sym, params_sym)
-
-        case type
-        when :create, :update, :delete
-          object.define_action_method(method_name, call_name, { flash: true }.merge(options))
-        else
-          object.define_action_method(method_name, call_name, options)
-        end
+        object.define_action_method(method_name, call_name, options)
       end
 
       def self.define_call object, type, call_name, clazz, var_sym, params_sym

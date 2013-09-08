@@ -5,7 +5,10 @@ class TestCase
     FORMATS = [Mime::Type.new("text/html", :html), Mime::Type.new("application/json", :json)]
 
     RESCUE_OPTIONS = [
-      [:create, :update]
+      [:show],
+      [:new, :show, :create],
+      [:new, :show, :edit, :create, :update],
+      [:new, :show, :edit, { create: {}, update: {}, delete: {} }],
     ]
 
     FLASHS = [:DefaultController, :RescueController, :RescueDogController]

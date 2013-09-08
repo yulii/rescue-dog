@@ -43,14 +43,24 @@ module Rescue
         params_sym = :"#{name}_params"
 
         Parameter.define(self)
+
+        [:new].each do |type|
+          args = options.delete(type) || (actions.delete(type) ? {} : nil)
+          Action.define(self, type, type, clazz, var_sym, params_sym, args) if args
+        end
+
+        [:show, :edit].each do |type|
+          args = options.delete(type) || (actions.delete(type) ? {} : nil)
+          Action.define(self, type, :find, clazz, var_sym, params_sym, args) if args
+        end
  
-        Action.define(self, :index, :index, clazz, var_sym, params_sym, options[:index])
-        Action.define(self, :show, :find, clazz, var_sym, params_sym, options[:show])
-        Action.define(self, :edit, :find, clazz, var_sym, params_sym, options[:edit])
-        Action.define(self, :new, :new, clazz, var_sym, params_sym, options[:new])
-        Action.define(self, :create, :create, clazz, var_sym, params_sym, options[:create])
-        Action.define(self, :update, :update, clazz, var_sym, params_sym, options[:update])
-        Action.define(self, :delete, :delete, clazz, var_sym, params_sym, options[:delete])
+        [:create, :update, :delete].each do |type|
+          args = options.delete(type) || (actions.delete(type) ? {} : nil)
+          if args
+            args[:flash] ||= true
+            Action.define(self, type, type, clazz, var_sym, params_sym, args)
+          end
+        end
       end
 
       def define_action_method name, call_method, options = {}
