@@ -45,26 +45,21 @@ module Rescue
         Parameter.define(self)
         Action.define(self, clazz, var_sym, params_sym)
 
-        [:new].each do |type|
+        [:new, :edit, :show, :create, :update, :delete].each do |type|
           args = options.delete(type) || (actions.delete(type) ? {} : nil)
-          define_action_method(type, :new_call, args) if args
-        end
-
-        [:show, :edit].each do |type|
-          args = options.delete(type) || (actions.delete(type) ? {} : nil)
-          define_action_method(type, :find_call, args) if args
-        end
- 
-        [:create, :update, :delete].each do |type|
-          args = options.delete(type) || (actions.delete(type) ? {} : nil)
-          if args
-            args[:flash] ||= true
-            define_action_method(type, :"#{type}_call", args) if args
-          end
+          define_action_method(type, args) if args
         end
       end
 
-      def define_action_method name, call_method, options = {}
+      def define_action_method name, options = {}
+        raise RuntimeError "`name` is already defined." if method_defined?(name)
+        options[:type]  ||= name
+        options[:flash] ||= [:create, :update, :delete].include?(options[:type])
+        call_method = case options[:type]
+          when :show, :edit ; :find_call
+          else ; :"#{options[:type]}_call"
+        end
+        rescue_given    = options[:rescue]||options[:error]||options[:flash]
         success_message = options[:success]
         error_message   = options[:error]
         if options[:flash]
@@ -72,14 +67,21 @@ module Rescue
           error_message   ||= Flash.message(self, name, :error)
         end
 
-        define_method name do
-          begin
+        if rescue_given
+          define_method name do
+            begin
+              send(call_method)
+              flash[:success] = success_message unless success_message.blank?
+              instance_exec(&options[:render]) if options[:render]
+            rescue
+              flash.now[:error] = error_message unless error_message.blank?
+              instance_exec(&options[:rescue]) if options[:rescue]
+            end
+          end
+        else
+          define_method name do
             send(call_method)
-            flash[:success] = success_message unless success_message.blank?
             instance_exec(&options[:render]) if options[:render]
-          rescue
-            flash.now[:error] = error_message unless error_message.blank?
-            instance_exec(&options[:rescue]) if options[:rescue]
           end
         end
       end

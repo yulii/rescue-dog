@@ -8,7 +8,7 @@ module Rescue
           instance_variable_set(var_sym, clazz.new)
         end
         object.send(:define_method, :find_call) do
-          id = find_params[Rescue.config.primary_key]
+          id   = find_params[Rescue.config.primary_key]
           instance_variable_set(var_sym, clazz.find(id))
         end
         object.send(:define_method, :create_call) do
