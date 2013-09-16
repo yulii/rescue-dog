@@ -26,7 +26,22 @@ Or install it yourself as:
 $ gem install rescue-dog
 ```
 
-## Usage
+## Simple CRUD Actions
+
+1. Include `Rescue::Controller::Static` (or `Rescue::Controller::Dynamic`).
+2. Call `rescue_controller` method.
+
+### Define Actions
+
+```ruby
+class UsersController < ApplicationController
+  rescue_controller User, :new, :edit, :show,
+    create: { render: lambda { redirect_to edit_user_path(@user) } ,rescue: lambda { render :new  } },
+    update: { render: lambda { redirect_to edit_user_path(@user) } ,rescue: lambda { render :edit } },
+    delete: { render: lambda { redirect_to root_path }             ,rescue: lambda { render :edit } }
+```
+ 
+## Render Errors
 
 1. Include `Rescue::Controller::Static` or `Rescue::Controller::Dynamic`.
 2. Call `rescue_associate` method. And then, the exception class is defined and added to `rescue_handlers`.
