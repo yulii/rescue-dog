@@ -70,10 +70,11 @@ module Rescue
         if rescue_given
           define_method name do
             begin
-              send(call_method)
+              send(call_method, &options[:intercept])
               flash[:success] = success_message unless success_message.blank?
               instance_exec(&options[:render]) if options[:render]
-            rescue
+            rescue => e
+              Rails.logger.debug(e.backtrace.unshift(e.message).join("\n\t"))
               flash.now[:error] = error_message unless error_message.blank?
               instance_exec(&options[:rescue]) if options[:rescue]
             end
