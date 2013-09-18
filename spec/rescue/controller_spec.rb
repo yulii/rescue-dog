@@ -56,8 +56,11 @@ describe Rescue::Controller do
       clazz = Class.new ApplicationController do
         include Rescue::Controller
       end
+      flash = Hash.new
+      flash.stub(:now).and_return({})
+
       object = clazz.new
-      object.stub(:flash).and_return({})
+      object.stub(:flash).and_return(flash)
       object.stub(:controller_path).and_return('rescue')
       object.stub(:action_name).and_return('action')
       object.stub(:stub_call).with({}).and_return(nil)
