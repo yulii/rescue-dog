@@ -70,8 +70,8 @@ describe Rescue::Controller do
     it "should be able to render" do
       expect(
         object.send(:rescue_respond, :stub_call, {},
-          render: lambda { return 'render' },
-          rescue: lambda { return 'rescue' })
+          render: lambda { 'render' },
+          rescue: lambda { 'rescue' })
       ).to eq('render')
     end
 
