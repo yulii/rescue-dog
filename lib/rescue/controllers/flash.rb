@@ -3,9 +3,11 @@ module Rescue
   module Controller
     class Flash
 
-      def self.message object, action, key 
-        controllers = object.class.name.gsub('Controller', '').split('::').map {|e| e.underscore }
-        scope = ([:views] + controllers) << action << :flash
+      def self.message object, key 
+        scope = [:views]
+        scope += object.controller_path.split('/')
+        scope << object.action_name
+        scope << :flash
         text(key, scope)
       end
 

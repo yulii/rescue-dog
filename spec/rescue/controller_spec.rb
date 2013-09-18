@@ -3,74 +3,110 @@ require 'spec_helper'
 
 describe Rescue::Controller do
 
-  describe Rescue::Controller::ClassMethods do
-    let(:object) do
-      Class.new ApplicationController do
-        extend Rescue::Controller::ClassMethods
-      end
-    end
+  let(:object) do
+    Class.new ApplicationController do
+      include Rescue::Controller
+      rescue_controller RescueModel,
+        show: [:show_action],
+        edit: [:edit_action],
+        new:  [:new_action],
+        create: { render: lambda { } ,rescue: lambda { } },
+        update: { render: lambda { } ,rescue: lambda { } },
+        delete: { render: lambda { } ,rescue: lambda { } },
+        create_action: { type: :create, render: lambda { } ,rescue: lambda { } },
+        update_action: { type: :update, render: lambda { } ,rescue: lambda { } },
+        delete_action: { type: :delete, render: lambda { } ,rescue: lambda { } }
 
-    [:rescue_associate, :rescue_controller, :define_action_method].each do |name|
-      it "should be able to call method `#{name}`" do
-        expect(object.public_methods.include? name).to be_true
+      def customized_create_action
+        rescue_respond(:create_call, create_params,
+          render: lambda { },
+          rescue: lambda { }
+        )
+      end
+
+      def customized_update_action
+        rescue_respond(:update_call, update_params,
+          render: lambda { return true },
+          rescue: lambda { }
+        )
+      end
+
+      def customized_delete_action
+        rescue_respond(:delete_call, delete_params,
+          render: lambda { },
+          rescue: lambda { }
+        )
       end
     end
   end
 
-  describe "Rescue::Controller#rescue_controller" do
+  it "should be defined `rescue_respond`" do
+    expect(object.method_defined? :rescue_respond).to be_true
+  end
+
+  [:rescue_associate, :rescue_controller].each do |name|
+    it "should be able to call method `#{name}`" do
+      expect(object.public_methods.include? name).to be_true
+    end
+  end
+
+
+  describe "#rescue_respond" do
     let(:object) do
-      Class.new ApplicationController do
-        extend Rescue::Controller::ClassMethods
-        rescue_controller RescueModel, :show, :new, :edit, { create: {}, update: {}, delete: {} }
+      clazz = Class.new ApplicationController do
+        include Rescue::Controller
       end
+      object = clazz.new
+      object.stub(:flash).and_return({})
+      object.stub(:controller_path).and_return('rescue')
+      object.stub(:action_name).and_return('action')
+      object.stub(:stub_call).with({}).and_return(nil)
+      object
     end
 
-    it "should be defined private method `find_params`" do
-      expect(object.private_instance_methods.include? :find_params).to be_true
+    it "should be able to render" do
+      expect(
+        object.send(:rescue_respond, :stub_call, {},
+          render: lambda { return 'render' },
+          rescue: lambda { return 'rescue' })
+      ).to eq('render')
     end
 
-    [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
-      it "should be defined private method `#{name}`" do
-        expect(object.private_instance_methods.include? name).to be_true
-      end
-    end
+  end
 
-    [:new, :edit, :show, :create, :update, :delete].each do |name|
-      it "should be defined public method `#{name}`" do
-        expect(object.public_instance_methods.include? name).to be_true
-      end
-    end
+  describe Rescue::Controller::ClassMethods do
+    describe "#rescue_controller" do
 
-    TestCase::Controller::RESCUE_OPTIONS.each do |args|
-      context "when `rescue_controller` is called #{args}" do
-        options = args.extract_options!
-        methods = args + options.keys
-
-        let(:object) do
-          Class.new ApplicationController do
-            extend Rescue::Controller::ClassMethods
-            rescue_controller RescueModel, *args.dup, options.dup
-          end
-        end
-
-        [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
-          it "should be defined private method `#{name}`" do
-            expect(object.private_instance_methods.include? name).to be_true
-          end
-        end
-
-        [:index, :new, :edit, :show, :create, :update, :delete].each do |name|
-          if methods.include? name
-            it "should be defined public method `#{name}`" do
-              expect(object.public_instance_methods.include? name).to be_true
-            end
-          else
-            it "should not be defined method `#{name}`" do
-              expect(object.instance_methods.include? name).to be_false
-            end
-          end
+      let(:object) do
+        Class.new ApplicationController do
+          extend Rescue::Controller::ClassMethods
+          rescue_controller RescueModel,
+            show: [:show_action],
+            edit: [:edit_action],
+            new:  [:new_action],
+            create: { render: lambda { } ,rescue: lambda { } },
+            update: { render: lambda { } ,rescue: lambda { } },
+            delete: { render: lambda { } ,rescue: lambda { } },
+            create_action: { type: :create, render: lambda { } ,rescue: lambda { } },
+            update_action: { type: :update, render: lambda { } ,rescue: lambda { } },
+            delete_action: { type: :delete, render: lambda { } ,rescue: lambda { } }
         end
       end
+
+      [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
+        it "should be defined private method `#{name}`" do
+          expect(object.private_instance_methods.include? name).to be_true
+        end
+      end
+  
+      [ :new, :edit, :show, :create, :update, :delete,
+        :show_action, :edit_action, :new_action,
+        :create_action, :update_action, :delete_action ].each do |name|
+        it "should be defined public method `#{name}`" do
+          expect(object.public_instance_methods.include? name).to be_true
+        end
+      end
+
     end
   end
 

@@ -12,55 +12,38 @@ describe Rescue::Controller::Action do
       object.stub(:destroy!).and_return(true)
       object
     end
+    clazz.stub(:where).and_return(clazz)
     clazz.stub(:find).and_return(clazz.new)
     clazz
   end
 
-  let(:controller) do # Fake Controller
-    clazz = model
-    Class.new do
-      Rescue::Controller::Action.define self, clazz, :@rescue, :rescue_params
-    end
-  end
-
-  let(:object) do
-    object = controller.new
-    object.stub(:find_params).and_return({})
-    object.stub(:rescue_params).and_return({})
-    object
-  end
-
-  let(:exception) do
-    Class.new(RuntimeError)
-  end
-
   describe "#define" do
+    let(:controller) do # Fake Controller
+      clazz = model
+      Class.new do
+        Rescue::Controller::Action.define_call self, clazz, :@rescue
+      end
+    end
+  
+    let(:object) do
+      object = controller.new
+      object.stub(:rescuemodel_params).and_return({})
+      object.stub(:params).and_return({})
+      object
+    end
+  
+    let(:params) { {} }
+  
     [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
       it "should be defined private method `#{name}`" do
         expect(controller.private_instance_methods.include? name).to be_true
       end
-    end
-  end
-
-  [:find_call, :new_call].each do |name|
-    describe "##{name}" do
-      it { expect { object.send(name) }.not_to raise_error }
-    end
-  end
-
-  [:create_call, :update_call, :delete_call].each do |name|
-    describe "##{name}" do
-      it { expect { object.send(name) }.not_to raise_error }
-
-      context "with &block" do
-        let(:block) { raise exception }
-
-        it "should execute block-process" do
-          expect { object.send(name, &block) }.to raise_error(exception)
-        end
+      it "should not raise error" do
+        expect { object.send(name, params) }.not_to raise_error
       end
-      
     end
+
   end
 
 end
+

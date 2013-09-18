@@ -23,7 +23,7 @@ module Rescue
             end
           end
         end
-        base.extend Rescue::Controller::ClassMethods
+        base.send(:include, Rescue::Controller)
       end
 
     end

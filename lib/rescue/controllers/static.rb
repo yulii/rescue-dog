@@ -10,7 +10,7 @@ module Rescue
             render status: code, file: "#{Rails.root}/public/#{code}", layout: false and return
           end
         end
-        base.extend Rescue::Controller::ClassMethods
+        base.send(:include, Rescue::Controller)
       end
   
     end

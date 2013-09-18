@@ -3,26 +3,23 @@ require 'spec_helper'
 
 describe Rescue::Controller::Flash do
 
-  before(:all) do
-    TestCase::Controller::FLASHS.each do |name|
-      Object.const_set name, Class.new {}
-    end
+  describe "#message" do
+    ['default', 'rescue', 'rescue/dog'].each do |name|
+      context "when #{{ controller: name, action: :action }}" do
 
-    Rescue.const_set :DogController, Class.new {}
-  end
-
-  describe "Rescue::Controller::Flash#message" do
-    TestCase::Controller::FLASHS.each do |name|
-      [:success, :error].each do |status|
-        it do
-          expect(Rescue::Controller::Flash.message(Object.const_get(name).new, :action, status)).to eq("#{name.to_s.underscore} #{status}")
+        let(:controller) do
+          clazz = Class.new
+          clazz.stub(:controller_path).and_return(name)
+          clazz.stub(:controller_name).and_return(name)
+          clazz.stub(:action_name).and_return(:action)
+          clazz
         end
-      end
-    end
 
-    [:success, :error].each do |status|
-      it do
-        expect(Rescue::Controller::Flash.message(Rescue::DogController.new, :action, status)).to eq(status.to_s)
+        [:success, :error].each do |status|
+          it do
+            expect(Rescue::Controller::Flash.message(controller, status)).to eq("#{name} #{status}")
+          end
+        end
       end
     end
   end

@@ -1,24 +1,24 @@
 en:
   default:
     flash:
-      success: "default_controller success"
-      error: "default_controller error"
+      success: "default success"
+      error: "default error"
 
   views:
     rescue:
       action:
         flash:
-          success: "rescue_controller success"
-          error: "rescue_controller error"
+          success: "rescue success"
+          error: "rescue error"
       dog:
         action:
           flash:
-            success: "success"
-            error: "error"
+            success: "rescue/dog success"
+            error: "rescue/dog error"
 
     rescue_dog:
       action:
         flash:
-          success: "rescue_dog_controller success"
-          error: "rescue_dog_controller error"
+          success: "rescue_dog success"
+          error: "rescue_dog error"
 

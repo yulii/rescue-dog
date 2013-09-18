@@ -2,6 +2,24 @@
 module Rescue
   module Controller
 
+    def self.included(base)
+      base.extend Rescue::Controller::ClassMethods
+    end
+
+    def rescue_respond call, params, options = {}
+      begin
+        send(call, params)
+        success_message = options[:success]||Flash.message(self, :success)
+        flash[:success] = success_message unless success_message.blank?
+        instance_exec(&options[:render])
+      rescue => e
+        Rails.logger.debug ([e.message] + e.backtrace).join("\n\t")
+        error_message = options[:error]||Flash.message(self, :error)
+        flash.now[:error] = error_message unless error_message.blank?
+        instance_exec(&options[:rescue])
+      end
+    end
+
     module ClassMethods
 
       def rescue_associate *klasses, &block
@@ -37,54 +55,26 @@ module Rescue
       end
 
       def rescue_controller clazz, *actions
-        options    = actions.extract_options!
-        name       = clazz.name.downcase
-        var_sym    = :"@#{name}"
-        params_sym = :"#{name}_params"
+        options      = actions.extract_options!
+        method_names = actions + options.keys
+        name         = clazz.name.downcase
+        var_sym      = :"@#{name}"
+        params_sym   = :"#{name}_params"
 
-        Parameter.define(self)
-        Action.define(self, clazz, var_sym, params_sym)
-
-        [:new, :edit, :show, :create, :update, :delete].each do |type|
-          args = options.delete(type) || (actions.delete(type) ? {} : nil)
-          define_action_method(type, args) if args
-        end
-      end
-
-      def define_action_method name, options = {}
-        raise RuntimeError "`name` is already defined." if method_defined?(name)
-        options[:type]  ||= name
-        options[:flash] ||= [:create, :update, :delete].include?(options[:type])
-        call_method = case options[:type]
-          when :show, :edit ; :find_call
-          else ; :"#{options[:type]}_call"
-        end
-        rescue_given    = options[:rescue]||options[:error]||options[:flash]
-        success_message = options[:success]
-        error_message   = options[:error]
-        if options[:flash]
-          success_message ||= Flash.message(self, name, :success)
-          error_message   ||= Flash.message(self, name, :error)
-        end
-
-        if rescue_given
-          define_method name do
-            begin
-              send(call_method, &options[:intercept])
-              flash[:success] = success_message unless success_message.blank?
-              instance_exec(&options[:render]) if options[:render]
-            rescue => e
-              Rails.logger.debug(e.backtrace.unshift(e.message).join("\n\t"))
-              flash.now[:error] = error_message unless error_message.blank?
-              instance_exec(&options[:rescue]) if options[:rescue]
-            end
-          end
-        else
-          define_method name do
-            send(call_method)
-            instance_exec(&options[:render]) if options[:render]
+        [:show, :edit, :new].each do |type|
+          (options.delete(type)||[]).each do |name|
+            method_names << name
+            options[name] = { type: type }
           end
         end
+
+        [:create, :update, :delete].each do |type|
+          options[type] ||= {}
+          options[type][:params] = params_sym
+        end
+
+        Action.define_call(self, clazz, var_sym)
+        Action.define(self, method_names, options)
       end
 
     end
