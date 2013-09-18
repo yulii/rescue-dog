@@ -28,7 +28,7 @@ $ gem install rescue-dog
 
 ## Simple CRUD Actions
 
-1. Include `Rescue::Controller::Static` (or `Rescue::Controller::Dynamic`).
+1. Include `Rescue::Controller` (Rescue::Controller::Static` or `Rescue::Controller::Dynamic`).
 2. Call `rescue_controller` method.
 
 ### Define Actions

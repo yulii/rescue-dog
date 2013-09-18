@@ -10,12 +10,12 @@ describe Rescue::Controller do
         show: [:show_action],
         edit: [:edit_action],
         new:  [:new_action],
-        create: { render: lambda { } ,rescue: lambda { } },
-        update: { render: lambda { } ,rescue: lambda { } },
-        delete: { render: lambda { } ,rescue: lambda { } },
-        create_action: { type: :create, render: lambda { } ,rescue: lambda { } },
-        update_action: { type: :update, render: lambda { } ,rescue: lambda { } },
-        delete_action: { type: :delete, render: lambda { } ,rescue: lambda { } }
+        create:  { render: lambda { } ,rescue: lambda { } },
+        update:  { render: lambda { } ,rescue: lambda { } },
+        destroy: { render: lambda { } ,rescue: lambda { } },
+        create_action:  { type: :create  ,render: lambda { } ,rescue: lambda { } },
+        update_action:  { type: :update  ,render: lambda { } ,rescue: lambda { } },
+        destroy_action: { type: :destroy ,render: lambda { } ,rescue: lambda { } }
 
       def customized_create_action
         rescue_respond(:create_call, create_params,
@@ -31,8 +31,8 @@ describe Rescue::Controller do
         )
       end
 
-      def customized_delete_action
-        rescue_respond(:delete_call, delete_params,
+      def customized_destroy_action
+        rescue_respond(:destroy_call, destroy_params,
           render: lambda { },
           rescue: lambda { }
         )
@@ -84,24 +84,24 @@ describe Rescue::Controller do
             show: [:show_action],
             edit: [:edit_action],
             new:  [:new_action],
-            create: { render: lambda { } ,rescue: lambda { } },
-            update: { render: lambda { } ,rescue: lambda { } },
-            delete: { render: lambda { } ,rescue: lambda { } },
-            create_action: { type: :create, render: lambda { } ,rescue: lambda { } },
-            update_action: { type: :update, render: lambda { } ,rescue: lambda { } },
-            delete_action: { type: :delete, render: lambda { } ,rescue: lambda { } }
+            create:  { render: lambda { } ,rescue: lambda { } },
+            update:  { render: lambda { } ,rescue: lambda { } },
+            destroy: { render: lambda { } ,rescue: lambda { } },
+            create_action:  { type: :create  ,render: lambda { } ,rescue: lambda { } },
+            update_action:  { type: :update  ,render: lambda { } ,rescue: lambda { } },
+            destroy_action: { type: :destroy ,render: lambda { } ,rescue: lambda { } }
         end
       end
 
-      [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
+      [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
         it "should be defined private method `#{name}`" do
           expect(object.private_instance_methods.include? name).to be_true
         end
       end
   
-      [ :new, :edit, :show, :create, :update, :delete,
+      [ :new, :edit, :show, :create, :update, :destroy,
         :show_action, :edit_action, :new_action,
-        :create_action, :update_action, :delete_action ].each do |name|
+        :create_action, :update_action, :destroy_action ].each do |name|
         it "should be defined public method `#{name}`" do
           expect(object.public_instance_methods.include? name).to be_true
         end

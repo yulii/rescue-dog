@@ -7,8 +7,6 @@ module Rescue
         object.send(:define_method, :new_call) do |params = {}|
           instance_variable_set(var_sym, clazz.new(params))
         end
-# 検索条件を controller 毎に設定できるように
-# Update/Delete の params 引数とは別管理
         object.send(:define_method, :find_call) do |params = {}|
           id = (params.empty? ? send(:params) : params).delete(Rescue.config.primary_key)
           instance_variable_set(var_sym, clazz.where(params).find(id))
@@ -22,11 +20,11 @@ module Rescue
           instance_variable_get(var_sym).attributes = params
           instance_variable_get(var_sym).save!
         end
-        object.send(:define_method, :delete_call) do |params|
+        object.send(:define_method, :destroy_call) do |params|
           find_call(params)
-          instance_variable_get(var_sym).destroy!
+          instance_variable_get(var_sym).destroy
         end
-        object.send(:private, :new_call, :find_call, :create_call, :update_call, :delete_call)
+        object.send(:private, :new_call, :find_call, :create_call, :update_call, :destroy_call)
       end
 
       def self.define object, names, args = {}
@@ -46,9 +44,9 @@ module Rescue
               send(:new_call, params)
               instance_exec(&options[:render]) if options[:render]
             end
-          when :create, :update, :delete
+          when :create, :update, :destroy
             object.send(:define_method, name) do
-              params = send(options[:params])
+              params = send(options[:params]||:"#{name}_params")
               rescue_respond(:"#{type}_call", params, options)
             end
           else

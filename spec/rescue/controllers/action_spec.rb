@@ -9,7 +9,7 @@ describe Rescue::Controller::Action do
       object = Object.new
       object.stub(:attributes=).and_return(true)
       object.stub(:save!).and_return(true)
-      object.stub(:destroy!).and_return(true)
+      object.stub(:destroy).and_return(true)
       object
     end
     clazz.stub(:where).and_return(clazz)
@@ -34,7 +34,7 @@ describe Rescue::Controller::Action do
   
     let(:params) { {} }
   
-    [:find_call, :new_call, :create_call, :update_call, :delete_call].each do |name|
+    [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
       it "should be defined private method `#{name}`" do
         expect(controller.private_instance_methods.include? name).to be_true
       end

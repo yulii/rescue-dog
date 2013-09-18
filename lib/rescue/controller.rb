@@ -58,8 +58,6 @@ module Rescue
         options      = actions.extract_options!
         method_names = actions + options.keys
         name         = clazz.name.downcase
-        var_sym      = :"@#{name}"
-        params_sym   = :"#{name}_params"
 
         [:show, :edit, :new].each do |type|
           (options.delete(type)||[]).each do |name|
@@ -68,12 +66,12 @@ module Rescue
           end
         end
 
-        [:create, :update, :delete].each do |type|
+        [:create, :update, :destroy].each do |type|
           options[type] ||= {}
-          options[type][:params] = params_sym
+          options[type][:params] ||= :"#{type}_params"
         end
 
-        Action.define_call(self, clazz, var_sym)
+        Action.define_call(self, clazz, :"@#{name}")
         Action.define(self, method_names, options)
       end
 
