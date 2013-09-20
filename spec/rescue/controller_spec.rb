@@ -47,42 +47,18 @@ describe Rescue::Controller do
     flash
   end
 
-  let(:object) do
-    object = controller.new
-    # Stub: flash message
-    object.stub(:flash).and_return(flash)
-    # Stub: controller/action name for flash messages
-    object.stub(:controller_path).and_return('')
-    object.stub(:controller_name).and_return('')
-    object.stub(:action_name).and_return('')
-
-    # Stub: parameter methods
-    object.stub(:create_params).and_return({})
-    object.stub(:update_params).and_return({})
-    object.stub(:destroy_params).and_return({})
-    object.stub(:customized_params).and_return({})
-
-    # Stub: call methods
-    object.stub(:find_call).with(any_args()).and_raise('find_call execute')
-    object.stub(:new_call).and_raise('new_call execute')
-    object.stub(:create_call).and_raise('create_call execute')
-    object.stub(:update_call).and_raise('update_call execute')
-    object.stub(:destroy_call).with(any_args()).and_raise('destroy_call execute')
-    object
-  end
-
-  it "should be defined `rescue_respond`" do
+  it "should declare `rescue_respond` method" do
     expect(controller.method_defined? :rescue_respond).to be_true
   end
 
   [:rescue_associate, :rescue_controller].each do |name|
-    it "should be able to call method `#{name}`" do
+    it "should declare `#{name}` method" do
       expect(controller.public_methods.include? name).to be_true
     end
   end
 
   [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
-    it "should be defined private method `#{name}`" do
+    it "should declare `#{name}` method as private" do
       expect(controller.private_instance_methods.include? name).to be_true
     end
   end
@@ -90,12 +66,36 @@ describe Rescue::Controller do
   [ :new, :edit, :show, :create, :update, :destroy,
     :show_action, :edit_action, :new_action,
     :create_action, :update_action, :destroy_action ].each do |name|
-    it "should be defined public method `#{name}`" do
+    it "should declare `#{name}` method as public" do
       expect(controller.public_instance_methods.include? name).to be_true
     end
   end
 
   context "when action is executed" do
+    let(:object) do
+      object = controller.new
+      # Stub: flash message
+      object.stub(:flash).and_return(flash)
+      # Stub: controller/action name for flash messages
+      object.stub(:controller_path).and_return('')
+      object.stub(:controller_name).and_return('')
+      object.stub(:action_name).and_return('')
+  
+      # Stub: parameter methods
+      object.stub(:create_params).and_return({})
+      object.stub(:update_params).and_return({})
+      object.stub(:destroy_params).and_return({})
+      object.stub(:customized_params).and_return({})
+  
+      # Stub: call methods
+      object.stub(:find_call).with(any_args()).and_raise('find_call execute')
+      object.stub(:new_call).and_raise('new_call execute')
+      object.stub(:create_call).and_raise('create_call execute')
+      object.stub(:update_call).and_raise('update_call execute')
+      object.stub(:destroy_call).with(any_args()).and_raise('destroy_call execute')
+      object
+    end
+
     # Action Type Relation
     { find:    [:show, :edit, :show_action, :edit_action],
       new:     [:new, :new_action],
@@ -140,7 +140,7 @@ describe Rescue::Controller do
       object
     end
 
-    it "should be able to render" do
+    it "should render with no error" do
       expect(object.render_execute).to eq('render')
     end
 
