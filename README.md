@@ -26,19 +26,73 @@ Or install it yourself as:
 $ gem install rescue-dog
 ```
 
-## Simple CRUD Actions
+## Declare CRUD Actions
 
 1. Include `Rescue::Controller` (Rescue::Controller::Static` or `Rescue::Controller::Dynamic`).
 2. Call `rescue_controller` method.
+3. Declare `xxx_params` method. (cf. Rails 4 / Strong Parameters)
 
-### Define Actions
+### Simple CRUD Actions
 
 ```ruby
 class UsersController < ApplicationController
   rescue_controller User, :new, :edit, :show,
     create: { render: lambda { redirect_to edit_user_path(@user) } ,rescue: lambda { render :new  } },
     update: { render: lambda { redirect_to edit_user_path(@user) } ,rescue: lambda { render :edit } },
-    delete: { render: lambda { redirect_to root_path }             ,rescue: lambda { render :edit } }
+    destroy: { render: lambda { redirect_to root_path }             ,rescue: lambda { render :edit } }
+
+  ...
+
+  private
+  def create_params
+    params.require(:user).permit(
+      :name, :email, :password
+    )
+  end
+
+  def update_params
+    params.require(:user).permit(
+      :email, :password
+    )
+  end
+
+  # Destroyed condition variable object
+  def destroy_params
+    { id: params[:id] }
+  end
+end
+```
+
+### Customized Actions
+
+```ruby
+class UsersController < ApplicationController
+  rescue_controller User, :new, :edit, :show
+
+  def create
+    rescue_respond(:customized_create_call, create_params,
+      render: lambda { redirect_to edit_user_path(@user) },
+      rescue: lambda { render :new  } }
+    )
+  end
+
+  private
+  def create_params
+    params.require(:user).permit(
+      :name, :email, :password
+    )
+  end
+
+  def customized_create_call params
+    if User.exists?(params)
+      raise UserDuplicationError, "your email is duplicated!"
+    else
+      @user = User.new(params)
+      @user.save!
+    end
+  end
+
+end
 ```
  
 ## Render Errors
