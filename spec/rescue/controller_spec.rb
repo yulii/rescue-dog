@@ -3,19 +3,19 @@ require 'spec_helper'
 
 describe Rescue::Controller do
 
-  let(:object) do
+  let(:controller) do
     Class.new ApplicationController do
       include Rescue::Controller
       rescue_controller RescueModel,
         show: [:show_action],
         edit: [:edit_action],
         new:  [:new_action],
-        create:  { render: lambda { } ,rescue: lambda { } },
-        update:  { render: lambda { } ,rescue: lambda { } },
-        destroy: { render: lambda { } ,rescue: lambda { } },
-        create_action:  { type: :create  ,render: lambda { } ,rescue: lambda { } },
-        update_action:  { type: :update  ,render: lambda { } ,rescue: lambda { } },
-        destroy_action: { type: :destroy ,render: lambda { } ,rescue: lambda { } }
+        create:  { render: lambda { } ,rescue: lambda { raise $! } },
+        update:  { render: lambda { } ,rescue: lambda { raise $! } },
+        destroy: { render: lambda { } ,rescue: lambda { raise $! } },
+        create_action:  { type: :create  ,render: lambda { } ,rescue: lambda { raise $! } ,params: :customized_params },
+        update_action:  { type: :update  ,render: lambda { } ,rescue: lambda { raise $! } ,params: :customized_params },
+        destroy_action: { type: :destroy ,render: lambda { } ,rescue: lambda { raise $! } ,params: :customized_params }
 
       def customized_create_action
         rescue_respond(:create_call, create_params,
@@ -26,7 +26,7 @@ describe Rescue::Controller do
 
       def customized_update_action
         rescue_respond(:update_call, update_params,
-          render: lambda { return true },
+          render: lambda { },
           rescue: lambda { }
         )
       end
@@ -40,24 +40,97 @@ describe Rescue::Controller do
     end
   end
 
+  # Stub: flash object
+  let(:flash) do
+    flash = Hash.new
+    flash.stub(:now).and_return({})
+    flash
+  end
+
+  let(:object) do
+    object = controller.new
+    # Stub: flash message
+    object.stub(:flash).and_return(flash)
+    # Stub: controller/action name for flash messages
+    object.stub(:controller_path).and_return('')
+    object.stub(:controller_name).and_return('')
+    object.stub(:action_name).and_return('')
+
+    # Stub: parameter methods
+    object.stub(:create_params).and_return({})
+    object.stub(:update_params).and_return({})
+    object.stub(:destroy_params).and_return({})
+    object.stub(:customized_params).and_return({})
+
+    # Stub: call methods
+    object.stub(:find_call).with(any_args()).and_raise('find_call execute')
+    object.stub(:new_call).and_raise('new_call execute')
+    object.stub(:create_call).and_raise('create_call execute')
+    object.stub(:update_call).and_raise('update_call execute')
+    object.stub(:destroy_call).with(any_args()).and_raise('destroy_call execute')
+    object
+  end
+
   it "should be defined `rescue_respond`" do
-    expect(object.method_defined? :rescue_respond).to be_true
+    expect(controller.method_defined? :rescue_respond).to be_true
   end
 
   [:rescue_associate, :rescue_controller].each do |name|
     it "should be able to call method `#{name}`" do
-      expect(object.public_methods.include? name).to be_true
+      expect(controller.public_methods.include? name).to be_true
     end
   end
 
+  [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
+    it "should be defined private method `#{name}`" do
+      expect(controller.private_instance_methods.include? name).to be_true
+    end
+  end
+
+  [ :new, :edit, :show, :create, :update, :destroy,
+    :show_action, :edit_action, :new_action,
+    :create_action, :update_action, :destroy_action ].each do |name|
+    it "should be defined public method `#{name}`" do
+      expect(controller.public_instance_methods.include? name).to be_true
+    end
+  end
+
+  context "when action is executed" do
+    # Action Type Relation
+    { find:    [:show, :edit, :show_action, :edit_action],
+      new:     [:new, :new_action],
+      create:  [:create, :create_action],
+      update:  [:update, :update_action],
+      destroy: [:destroy, :destroy_action] 
+      }.each do |type, names|
+      names.each do |name|
+        it "should run `#{type}_call` when `#{name}` is executed" do
+          expect { object.send(name) }.to raise_error(RuntimeError, "#{type}_call execute")
+        end
+      end
+    end
+  end
 
   describe "#rescue_respond" do
     let(:object) do
       clazz = Class.new ApplicationController do
         include Rescue::Controller
+
+        # Subjects
+        def render_execute
+          rescue_respond(:stub_call, {},
+            render: lambda { 'render' },
+            rescue: lambda { 'rescue' }
+          )
+        end
+
+        def rescue_execute
+          rescue_respond(:stub_call, {},
+            render: lambda { raise RuntimeError },
+            rescue: lambda { 'rescue' }
+          )
+        end
       end
-      flash = Hash.new
-      flash.stub(:now).and_return({})
 
       object = clazz.new
       object.stub(:flash).and_return(flash)
@@ -68,48 +141,11 @@ describe Rescue::Controller do
     end
 
     it "should be able to render" do
-      expect(
-        object.send(:rescue_respond, :stub_call, {},
-          render: lambda { 'render' },
-          rescue: lambda { 'rescue' })
-      ).to eq('render')
+      expect(object.render_execute).to eq('render')
     end
 
-  end
-
-  describe Rescue::Controller::ClassMethods do
-    describe "#rescue_controller" do
-
-      let(:object) do
-        Class.new ApplicationController do
-          extend Rescue::Controller::ClassMethods
-          rescue_controller RescueModel,
-            show: [:show_action],
-            edit: [:edit_action],
-            new:  [:new_action],
-            create:  { render: lambda { } ,rescue: lambda { } },
-            update:  { render: lambda { } ,rescue: lambda { } },
-            destroy: { render: lambda { } ,rescue: lambda { } },
-            create_action:  { type: :create  ,render: lambda { } ,rescue: lambda { } },
-            update_action:  { type: :update  ,render: lambda { } ,rescue: lambda { } },
-            destroy_action: { type: :destroy ,render: lambda { } ,rescue: lambda { } }
-        end
-      end
-
-      [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
-        it "should be defined private method `#{name}`" do
-          expect(object.private_instance_methods.include? name).to be_true
-        end
-      end
-  
-      [ :new, :edit, :show, :create, :update, :destroy,
-        :show_action, :edit_action, :new_action,
-        :create_action, :update_action, :destroy_action ].each do |name|
-        it "should be defined public method `#{name}`" do
-          expect(object.public_instance_methods.include? name).to be_true
-        end
-      end
-
+    it "should render by the rescue block" do
+      expect(object.rescue_execute).to eq('rescue')
     end
   end
 
