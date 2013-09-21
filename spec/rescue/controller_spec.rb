@@ -47,17 +47,14 @@ describe Rescue::Controller do
     flash
   end
 
-  it "should declare `rescue_respond` method" do
-    expect(controller.method_defined? :rescue_respond).to be_true
-  end
-
   [:rescue_associate, :rescue_controller].each do |name|
     it "should declare `#{name}` method" do
       expect(controller.public_methods.include? name).to be_true
     end
   end
 
-  [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
+  [ :rescue_respond,
+    :find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
     it "should declare `#{name}` method as private" do
       expect(controller.private_instance_methods.include? name).to be_true
     end

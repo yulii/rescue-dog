@@ -4,6 +4,7 @@ module Rescue
 
     def self.included(base)
       base.extend Rescue::Controller::ClassMethods
+      base.send(:private, :rescue_respond)
     end
 
     def rescue_respond call, params, options = {}
