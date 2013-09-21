@@ -31,7 +31,7 @@ module Rescue
         names.each do |name|
           options = args[name]||{}
           type    = options[:type]||name
-          raise RuntimeError "`name` is already defined." if object.private_method_defined?(name)
+          raise RuntimeError, "`#{name}` is already defined." if object.method_defined?(name)
           case type
           when :show, :edit
             object.send(:define_method, name) do
@@ -50,7 +50,7 @@ module Rescue
               rescue_respond(:"#{type}_call", params, options)
             end
           else
-            raise RuntimeError "Undefined action type `#{type}`."
+            raise RuntimeError, "Undefined action type `#{type}`."
           end
         end
       end

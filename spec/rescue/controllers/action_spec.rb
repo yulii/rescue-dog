@@ -81,6 +81,38 @@ describe Rescue::Controller::Action do
         expect(object.send(name)).to eq(name.to_s)
       end
     end
+
+    context "when unknown types are specified" do
+      it do
+        expect {
+          Class.new do
+            Rescue::Controller::Action.define self, [:action],
+              action: { type: :undefined ,render: lambda { 'render' } ,rescue: lambda { 'rescue' } }
+          end
+        }.to raise_error(RuntimeError, "Undefined action type `undefined`.")
+      end
+    end
+
+    context "when an action name is duplicated" do
+
+      it "should not raise error for the first time" do
+        expect {
+          Class.new do
+            Rescue::Controller::Action.define self, [:action],
+              action: { type: :show ,render: lambda { 'render' } ,rescue: lambda { 'rescue' } }
+          end
+        }.not_to raise_error
+      end
+      it "should raise RuntimeError with \"`action` is already defined.\"" do
+        expect {
+          Class.new do
+            def action ; end
+            Rescue::Controller::Action.define self, [:action],
+              action: { type: :show ,render: lambda { 'render' } ,rescue: lambda { 'rescue' } }
+          end
+        }.to raise_error(RuntimeError, "`action` is already defined.")
+      end
+    end
   end
 end
 
