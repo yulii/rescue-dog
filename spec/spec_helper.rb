@@ -7,7 +7,7 @@ require File.join(File.dirname(__FILE__), 'fake_rails')
 require File.join(File.dirname(__FILE__), 'test_case')
 require 'capybara/rails'
 
-require 'benchmark'
+#require 'benchmark'
 
 Coveralls.wear!('rails')
 RSpec.configure do |config|

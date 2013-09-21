@@ -116,13 +116,13 @@ describe Rescue::Controller do
       end
     end
 
-    it "should be performed within 500 microseconds" do
-      n = 10000
-      measure = Benchmark.measure do
-        n.times { object.execute }
-      end
-      expect(measure.total).to be < (500 * 1.0e-06 * n)
-    end
+    #it "should be performed within 500 microseconds" do
+    #  n = 10000
+    #  measure = Benchmark.measure do
+    #    n.times { object.execute }
+    #  end
+    #  expect(measure.total).to be < (500 * 1.0e-06 * n)
+    #end
   end
 
   describe "#rescue_respond" do
