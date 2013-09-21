@@ -46,11 +46,15 @@ module Rescue
             end
           when :create, :update, :destroy
             object.send(:define_method, name) do
-              params = send(options[:params]||:"#{name}_params")
-              rescue_respond(:"#{type}_call", params, options)
+              begin 
+                params = send(options[:params]||:"#{name}_params")
+                rescue_respond(:"#{type}_call", params, options)
+              rescue NoMethodError => e
+                raise NoParameterMethodError.new(self.class, e.name)
+              end
             end
           else
-            raise RuntimeError, "Undefined action type `#{type}`."
+            raise Rescue::NoActionError.new(type)
           end
         end
       end

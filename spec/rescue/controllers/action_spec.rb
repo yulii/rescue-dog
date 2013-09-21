@@ -89,12 +89,11 @@ describe Rescue::Controller::Action do
             Rescue::Controller::Action.define self, [:action],
               action: { type: :undefined ,render: lambda { 'render' } ,rescue: lambda { 'rescue' } }
           end
-        }.to raise_error(RuntimeError, "Undefined action type `undefined`.")
+        }.to raise_error(Rescue::NoActionError, Rescue::NoActionError.new(:undefined).message)
       end
     end
 
     context "when an action name is duplicated" do
-
       it "should not raise error for the first time" do
         expect {
           Class.new do
@@ -113,6 +112,18 @@ describe Rescue::Controller::Action do
         }.to raise_error(RuntimeError, "`action` is already defined.")
       end
     end
+
+    context "when an parameter method is undefined" do
+      { create:  :create_params,
+        update:  :update_params,
+        destroy: :destroy_params }.each do |name, params|
+        it do
+          expect {
+            controller.new.send(name)
+          }.to raise_error(Rescue::NoParameterMethodError, Rescue::NoParameterMethodError.new(controller, params).message)
+        end
+      end
+    end  
   end
 end
 

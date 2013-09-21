@@ -6,6 +6,7 @@ require "rescue/controllers/action.rb"
 require "rescue/controllers/flash.rb"
 require 'rescue/exceptions/application_error.rb'
 require 'rescue/exceptions/respond_error.rb'
+require 'rescue/errors.rb'
 
 module Rescue
   class Bind
