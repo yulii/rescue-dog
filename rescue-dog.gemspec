@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Rescue::VERSION
   gem.authors       = ["yulii"]
   gem.email         = ["yuliinfo@gmail.com"]
-  gem.description   = %q{respond to an exception raised in Rails}
-  gem.summary       = %q{define respond methods}
+  gem.description   = %q{Responds status and error handling for Rails}
+  gem.summary       = %q{Declare simple CRUD and respond error methods}
   gem.homepage      = "https://github.com/yulii/rescue-dog"
   gem.license       = 'MIT'
 
