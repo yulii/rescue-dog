@@ -37,6 +37,13 @@ describe Rescue::Controller do
           rescue: lambda { }
         )
       end
+
+      def execute
+        rescue_respond(:execute_call, execute_params,
+          render: lambda { },
+          rescue: lambda { }
+        )
+      end
     end
   end
 
@@ -82,6 +89,7 @@ describe Rescue::Controller do
       object.stub(:create_params).and_return({})
       object.stub(:update_params).and_return({})
       object.stub(:destroy_params).and_return({})
+      object.stub(:execute_params).and_return({})
       object.stub(:customized_params).and_return({})
   
       # Stub: call methods
@@ -89,7 +97,8 @@ describe Rescue::Controller do
       object.stub(:new_call).and_raise('new_call execute')
       object.stub(:create_call).and_raise('create_call execute')
       object.stub(:update_call).and_raise('update_call execute')
-      object.stub(:destroy_call).with(any_args()).and_raise('destroy_call execute')
+      object.stub(:destroy_call).and_raise('destroy_call execute')
+      object.stub(:execute_call).and_raise()
       object
     end
 
@@ -105,6 +114,14 @@ describe Rescue::Controller do
           expect { object.send(name) }.to raise_error(RuntimeError, "#{type}_call execute")
         end
       end
+    end
+
+    it "should be performed within 500 microseconds" do
+      n = 10000
+      measure = Benchmark.measure do
+        n.times { object.execute }
+      end
+      expect(measure.total).to be < (500 * 1.0e-06 * n)
     end
   end
 
