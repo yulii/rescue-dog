@@ -8,23 +8,13 @@ The Rescue-Dog responds HTTP status (the code and message) when raises the excep
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add "rescue-dog" gem to your `Gemfile`
 
 ```ruby
 gem 'rescue-dog'
 ```
 
-And then execute:
-
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-
-```bash
-$ gem install rescue-dog
-```
+And run `bundle install` command.
 
 ## Declare CRUD Actions
 
@@ -142,7 +132,7 @@ rescue_associate ActiveRecord::RecordNotFound ,with: 404
 rescue_associate Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId, with: 404
 ```
 
-Learn more usage, check [`spec`](https://github.com/yulii/rescue-dog/blob/master/spec/rails_spec_app.rb)
+Learn more usage, check [`spec`](https://github.com/yulii/rescue-dog/blob/master/spec/fake_rails.rb)
 
 ### Respond Application Error Codes
 1. Include `Rescue::Controller::Dynamic` (NOT `Rescue::Controller::Static`).
