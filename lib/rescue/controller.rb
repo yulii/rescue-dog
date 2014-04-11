@@ -58,7 +58,7 @@ module Rescue
       def rescue_controller clazz, *actions
         options      = actions.extract_options!
         method_names = actions + options.keys
-        name         = clazz.name.downcase
+        name         = clazz.name.underscore
 
         [:show, :edit, :new].each do |type|
           (options.delete(type)||[]).each do |name|
