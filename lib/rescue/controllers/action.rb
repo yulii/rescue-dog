@@ -11,16 +11,16 @@ module Rescue
           id = (params.empty? ? send(:params) : params).delete(Rescue.config.primary_key)
           instance_variable_set(var_sym, clazz.where(params).find(id))
         end
-        object.send(:define_method, :create_call) do |params|
+        object.send(:define_method, :create_call) do |params, validate = {}|
           new_call(params)
-          instance_variable_get(var_sym).save!
+          instance_variable_get(var_sym).save!(validate)
         end
-        object.send(:define_method, :update_call) do |params|
+        object.send(:define_method, :update_call) do |params, validate = {}|
           find_call
           instance_variable_get(var_sym).attributes = params
-          instance_variable_get(var_sym).save!
+          instance_variable_get(var_sym).save!(validate)
         end
-        object.send(:define_method, :destroy_call) do |params|
+        object.send(:define_method, :destroy_call) do |params, validate = {}|
           find_call(params)
           instance_variable_get(var_sym).destroy
         end

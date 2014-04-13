@@ -9,7 +9,7 @@ module Rescue
 
     def rescue_respond call, params, options = {}
       begin
-        send(call, params)
+        send(call, params, (options[:validate] ? { context: options[:validate] } : {}))
         success_message = options[:success]||Flash.message(self, :success)
         flash[:success] = success_message unless success_message.blank?
         instance_exec(&options[:render])

@@ -150,7 +150,7 @@ describe Rescue::Controller do
       object.stub(:flash).and_return(flash)
       object.stub(:controller_path).and_return('rescue')
       object.stub(:action_name).and_return('action')
-      object.stub(:stub_call).with({}).and_return(nil)
+      object.stub(:stub_call).with({},{}).and_return(nil)
       object
     end
 
