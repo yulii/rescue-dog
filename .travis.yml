@@ -1,22 +1,22 @@
 language: ruby
-bundler_args: --without development
 rvm:
   - 1.9.3
   - 2.0.0
+  - 2.1
+  - 2.2.2
   - ruby-head
   - jruby-19mode
   - jruby-20mode
   - jruby-head
+  - rbx-2
 matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: rbx-2
+before_install: gem install bundler -v 1.10.5
 branches:
   only:
     - master
 after_success:
   - cover -report coveralls
-notifications:
-  recipients:
-    - yuliinfo@gmail.com
-
