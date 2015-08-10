@@ -24,18 +24,18 @@ describe Rescue::Controller::Action do
         Rescue::Controller::Action.define_call self, clazz, :@rescue
       end
     end
-  
+
     let(:object) do
       object = controller.new
       object.stub(:params).and_return({})
       object
     end
-  
+
     let(:params) { {} }
-  
+
     [:find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
       it "should declare `#{name}` method as private" do
-        expect(controller.private_instance_methods.include? name).to be_true
+        expect(controller.private_instance_methods.include? name).to eq(true)
       end
       it "should not raise error" do
         expect { object.send(name, params) }.not_to raise_error
@@ -75,7 +75,7 @@ describe Rescue::Controller::Action do
 
     [:show, :edit, :new, :create, :update, :destroy].each do |name|
       it "should declare `#{name}` method" do
-        expect(controller.public_instance_methods.include? name).to be_true
+        expect(controller.public_instance_methods.include? name).to eq(true)
       end
       it "should render" do
         expect(object.send(name)).to eq(name.to_s)
@@ -123,7 +123,7 @@ describe Rescue::Controller::Action do
           }.to raise_error(Rescue::NoParameterMethodError, Rescue::NoParameterMethodError.new(controller, params).message)
         end
       end
-    end  
+    end
   end
 end
 

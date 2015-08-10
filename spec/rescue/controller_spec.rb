@@ -56,14 +56,14 @@ describe Rescue::Controller do
 
   [:rescue_associate, :rescue_controller].each do |name|
     it "should declare `#{name}` method" do
-      expect(controller.public_methods.include? name).to be_true
+      expect(controller.public_methods.include? name).to eq(true)
     end
   end
 
   [ :rescue_respond,
     :find_call, :new_call, :create_call, :update_call, :destroy_call].each do |name|
     it "should declare `#{name}` method as private" do
-      expect(controller.private_instance_methods.include? name).to be_true
+      expect(controller.private_instance_methods.include? name).to eq(true)
     end
   end
 
@@ -71,7 +71,7 @@ describe Rescue::Controller do
     :show_action, :edit_action, :new_action,
     :create_action, :update_action, :destroy_action ].each do |name|
     it "should declare `#{name}` method as public" do
-      expect(controller.public_instance_methods.include? name).to be_true
+      expect(controller.public_instance_methods.include? name).to eq(true)
     end
   end
 
@@ -84,14 +84,14 @@ describe Rescue::Controller do
       object.stub(:controller_path).and_return('')
       object.stub(:controller_name).and_return('')
       object.stub(:action_name).and_return('')
-  
+
       # Stub: parameter methods
       object.stub(:create_params).and_return({})
       object.stub(:update_params).and_return({})
       object.stub(:destroy_params).and_return({})
       object.stub(:execute_params).and_return({})
       object.stub(:customized_params).and_return({})
-  
+
       # Stub: call methods
       object.stub(:find_call).with(any_args()).and_raise('find_call execute')
       object.stub(:new_call).and_raise('new_call execute')
@@ -107,7 +107,7 @@ describe Rescue::Controller do
       new:     [:new, :new_action],
       create:  [:create, :create_action],
       update:  [:update, :update_action],
-      destroy: [:destroy, :destroy_action] 
+      destroy: [:destroy, :destroy_action]
       }.each do |type, names|
       names.each do |name|
         it "should run `#{type}_call` when `#{name}` is executed" do

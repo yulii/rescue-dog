@@ -8,7 +8,7 @@ describe Rescue::RespondError do
       let(:name) { e[:status].gsub(' ', '') }
 
       it "expects to define an exception class of #{e[:status]}" do
-        expect(Object.const_defined? name).to be_true
+        expect(Object.const_defined? name).to eq(true)
       end
 
       it "expects to define an exception class that is a kind of Rescue::ApplicationError" do

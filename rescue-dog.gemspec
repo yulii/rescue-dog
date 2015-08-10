@@ -1,22 +1,28 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rescue/version'
 
-Gem::Specification.new do |gem|
-  gem.name          = "rescue-dog"
-  gem.version       = Rescue::VERSION
-  gem.authors       = ["yulii"]
-  gem.email         = ["yuliinfo@gmail.com"]
-  gem.description   = %q{Responds status and error handling for Rails}
-  gem.summary       = %q{Declare simple CRUD and respond error methods}
-  gem.homepage      = "https://github.com/yulii/rescue-dog"
-  gem.license       = 'MIT'
+Gem::Specification.new do |spec|
+  spec.name          = 'rescue-dog'
+  spec.version       = Rescue::VERSION
+  spec.authors       = ['yulii']
+  spec.email         = ['yone.info@gmail.com']
 
-  gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ["lib"]
+  spec.summary       = 'Responds status and error handling for Rails.'
+  spec.description   = 'Declare simple CRUD and respond error methods.'
+  spec.homepage      = 'https://github.com/yulii/rescue-dog'
+  spec.license       = 'MIT'
 
-  gem.add_dependency 'rails', '>= 4.0.0'
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.bindir        = 'exe'
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
+
+  spec.add_dependency 'rails', '>= 4.0.0'
+
+  spec.add_development_dependency 'bundler', '~> 1.10'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'capybara'
+  spec.add_development_dependency 'coveralls'
 end

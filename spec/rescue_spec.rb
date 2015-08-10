@@ -8,7 +8,7 @@ describe Rescue do
     before     { Rescue::Bind.define_error_class name }
 
     it "expects to define an exception class" do
-      expect(Object.const_defined? name).to be_true
+      expect(Object.const_defined? name).to eq(true)
     end
 
     it "expects to define an exception class that is a kind of StandardError" do
@@ -21,7 +21,7 @@ describe Rescue do
     before     { Rescue::Bind.define_error_class name, ScriptError }
 
     it "expects to define an exception class" do
-      expect(Object.const_defined? name).to be_true
+      expect(Object.const_defined? name).to eq(true)
     end
 
     it "expects to define an exception class that is a kind of StandardError" do

@@ -7,7 +7,7 @@ describe Rescue::Controller::Dynamic do
 
   describe "respond method" do
     it "expects to be called in a subclass of ApplicationController" do
-      expect(object.methods.include? Rescue.config.respond_name).to be_true
+      expect(object.methods.include? Rescue.config.respond_name).to eq(true)
     end
   end
 
